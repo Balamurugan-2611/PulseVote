@@ -51,24 +51,32 @@ Go Backend API
 The architecture separates the user interface, application logic, persistent storage, and real-time infrastructure.
 
 📁 Project Structure
-PulseVote/
-├── backend/
-│   ├── cmd/
-│   ├── .env.example
-│   └── go.mod
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── data/
-│   │   └── ...
-│   ├── package.json
-│   ├── tailwind.config.js
-│   └── vite.config.*
-│
-├── .gitignore
-└── README.md
+
+Backend
+
+backend/cmd/ — Application entry points
+
+backend/.env.example — Environment configuration template
+
+backend/go.mod — Go module definition
+
+Frontend
+
+frontend/src/components/ — Reusable UI components
+
+frontend/src/pages/ — Application pages
+
+frontend/src/data/ — Poll/demo data
+
+frontend/package.json — Frontend dependencies and scripts
+
+frontend/tailwind.config.js — Tailwind CSS configuration
+
+Root
+
+.gitignore — Git ignore rules
+
+README.md — Project documentation
 
 🚀 Getting Started
 Prerequisites
