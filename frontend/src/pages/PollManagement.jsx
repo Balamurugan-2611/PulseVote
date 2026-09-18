@@ -48,9 +48,7 @@ export function PollManagement() {
       if (cancelled) return;
       setFetchState(poll ? 'found' : 'notfound');
     });
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [pollId, ensurePoll]);
 
   const poll = getPoll(pollId);
@@ -67,9 +65,7 @@ export function PollManagement() {
     );
   }
 
-  if (fetchState === 'notfound' || !poll) {
-    return <PollNotFound />;
-  }
+  if (fetchState === 'notfound' || !poll) return <PollNotFound />;
 
   const url = pollUrl(poll.id);
   const total = totalVotes(poll.options);
@@ -77,22 +73,14 @@ export function PollManagement() {
   const isActive = poll.status === 'active';
 
   const copyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(url);
-    } catch {
-      /* clipboard unavailable */
-    }
+    try { await navigator.clipboard.writeText(url); } catch { /* unavailable */ }
     toast.success('Poll link copied!');
   };
 
   const share = async () => {
     if (navigator.share) {
-      try {
-        await navigator.share({ title: 'Vote in my LivePoll', url });
-        return;
-      } catch {
-        /* dismissed */
-      }
+      try { await navigator.share({ title: 'Vote in my PulseVote poll', url }); return; }
+      catch { /* dismissed */ }
     }
     void copyLink();
   };
@@ -137,9 +125,7 @@ export function PollManagement() {
 
         <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-ink-subtle">
-              Poll Details
-            </p>
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-ink-subtle">Poll Details</p>
             <h1 className="mt-2 max-w-2xl text-[26px] font-extrabold leading-snug tracking-tight text-ink sm:text-[32px]">
               {poll.question}
             </h1>
@@ -148,7 +134,7 @@ export function PollManagement() {
         </div>
 
         {!isActive ? (
-          <p className="mt-4 rounded-lg border border-line bg-white px-4 py-3 text-sm font-medium text-ink-muted">
+          <p className="mt-4 rounded-lg border border-line bg-surface px-4 py-3 text-sm font-medium text-ink-muted">
             Voting is no longer available. Final results stay visible to anyone with the link.
           </p>
         ) : null}
@@ -157,14 +143,11 @@ export function PollManagement() {
           {/* Results panel */}
           <section
             aria-labelledby="results-heading"
-            className="rounded-xl border border-line bg-white p-5 shadow-card sm:p-6"
+            className="rounded-xl border border-line bg-surface p-5 shadow-card sm:p-6"
           >
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2
-                id="results-heading"
-                className="flex items-center gap-2 text-sm font-bold text-ink"
-              >
-                <BarChart3Icon className="h-4 w-4 text-brand-600" aria-hidden="true" />
+              <h2 id="results-heading" className="flex items-center gap-2 text-sm font-bold text-ink">
+                <BarChart3Icon className="h-4 w-4 text-live-500" aria-hidden="true" />
                 {isActive ? 'Live Results' : 'Final Results'}
               </h2>
               {isActive ? <ConnectionStatus size="sm" note="" /> : null}
@@ -183,10 +166,7 @@ export function PollManagement() {
               )}
             </div>
 
-            <Link
-              to={`/polls/${poll.id}/results`}
-              className={buttonClasses('primary', 'sm', 'mt-7')}
-            >
+            <Link to={`/polls/${poll.id}/results`} className={buttonClasses('primary', 'sm', 'mt-7')}>
               Open full live results
             </Link>
           </section>
@@ -194,15 +174,10 @@ export function PollManagement() {
           {/* Sidebar */}
           <div className="space-y-4">
             <Card>
-              <h2 className="text-[11px] font-bold uppercase tracking-[0.14em] text-ink-subtle">
-                Metadata
-              </h2>
+              <h2 className="text-[11px] font-bold uppercase tracking-[0.14em] text-ink-subtle">Metadata</h2>
               <dl className="mt-4 space-y-4">
                 <div className="flex items-start gap-3">
-                  <CalendarIcon
-                    className="mt-0.5 h-4 w-4 shrink-0 text-ink-subtle"
-                    aria-hidden="true"
-                  />
+                  <CalendarIcon className="mt-0.5 h-4 w-4 shrink-0 text-ink-subtle" aria-hidden="true" />
                   <div>
                     <dt className="text-xs text-ink-muted">Created</dt>
                     <dd className="text-sm font-semibold text-ink">
@@ -215,10 +190,7 @@ export function PollManagement() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <UsersIcon
-                    className="mt-0.5 h-4 w-4 shrink-0 text-ink-subtle"
-                    aria-hidden="true"
-                  />
+                  <UsersIcon className="mt-0.5 h-4 w-4 shrink-0 text-ink-subtle" aria-hidden="true" />
                   <div>
                     <dt className="text-xs text-ink-muted">Total votes</dt>
                     <dd className="text-sm font-semibold text-ink tabular-nums">{total}</dd>
@@ -228,59 +200,32 @@ export function PollManagement() {
             </Card>
 
             <Card>
-              <h2 className="text-[11px] font-bold uppercase tracking-[0.14em] text-ink-subtle">
-                Actions
-              </h2>
+              <h2 className="text-[11px] font-bold uppercase tracking-[0.14em] text-ink-subtle">Actions</h2>
               <div className="mt-4 space-y-2">
-                <Button
-                  variant="secondary"
-                  fullWidth
-                  onClick={copyLink}
-                  className="justify-start"
-                >
-                  <CopyIcon className="h-4 w-4" aria-hidden="true" />
-                  Copy Link
+                <Button variant="secondary" fullWidth onClick={copyLink} className="justify-start">
+                  <CopyIcon className="h-4 w-4" aria-hidden="true" /> Copy Link
                 </Button>
                 <Button variant="secondary" fullWidth onClick={share} className="justify-start">
-                  <Share2Icon className="h-4 w-4" aria-hidden="true" />
-                  Share
+                  <Share2Icon className="h-4 w-4" aria-hidden="true" /> Share
                 </Button>
-                <Button
-                  variant="secondary"
-                  fullWidth
-                  onClick={() => setQrOpen(true)}
-                  className="justify-start"
-                >
-                  <QrCodeIcon className="h-4 w-4" aria-hidden="true" />
-                  QR Code
+                <Button variant="secondary" fullWidth onClick={() => setQrOpen(true)} className="justify-start">
+                  <QrCodeIcon className="h-4 w-4" aria-hidden="true" /> QR Code
                 </Button>
-                <Link
-                  to={`/poll/${poll.id}`}
-                  className={buttonClasses('secondary', 'md', 'w-full justify-start')}
-                >
-                  <ExternalLinkIcon className="h-4 w-4" aria-hidden="true" />
-                  View Public Poll
+                <Link to={`/poll/${poll.id}`} className={buttonClasses('secondary', 'md', 'w-full justify-start')}>
+                  <ExternalLinkIcon className="h-4 w-4" aria-hidden="true" /> View Public Poll
                 </Link>
                 {isActive ? (
-                  <Button
-                    variant="danger"
-                    fullWidth
-                    onClick={() => setCloseOpen(true)}
-                    className="justify-start"
-                  >
-                    <LockIcon className="h-4 w-4" aria-hidden="true" />
-                    Close Poll
+                  <Button variant="danger" fullWidth onClick={() => setCloseOpen(true)} className="justify-start">
+                    <LockIcon className="h-4 w-4" aria-hidden="true" /> Close Poll
                   </Button>
                 ) : null}
-                {/* Delete — always visible regardless of status */}
                 <Button
                   variant="danger"
                   fullWidth
                   onClick={() => setDeleteOpen(true)}
-                  className="justify-start border-danger-100 bg-danger-50 text-danger-600 hover:bg-danger-100"
+                  className="justify-start bg-danger-50 text-danger-500 border-danger-100 hover:bg-danger-100"
                 >
-                  <Trash2Icon className="h-4 w-4" aria-hidden="true" />
-                  Delete Poll
+                  <Trash2Icon className="h-4 w-4" aria-hidden="true" /> Delete Poll
                 </Button>
               </div>
             </Card>
@@ -288,21 +233,8 @@ export function PollManagement() {
         </div>
       </main>
 
-      <ClosePollModal
-        open={closeOpen}
-        question={poll.question}
-        onCancel={() => setCloseOpen(false)}
-        onConfirm={handleClose}
-        loading={closing}
-      />
-
-      <DeletePollModal
-        open={deleteOpen}
-        question={poll.question}
-        onCancel={() => setDeleteOpen(false)}
-        onConfirm={handleDelete}
-        loading={deleting}
-      />
+      <ClosePollModal open={closeOpen} question={poll.question} onCancel={() => setCloseOpen(false)} onConfirm={handleClose} loading={closing} />
+      <DeletePollModal open={deleteOpen} question={poll.question} onCancel={() => setDeleteOpen(false)} onConfirm={handleDelete} loading={deleting} />
 
       <Modal
         open={qrOpen}
@@ -310,11 +242,7 @@ export function PollManagement() {
         description="Anyone can scan this to open the voting page."
         onClose={() => setQrOpen(false)}
         footer={
-          <button
-            type="button"
-            className={buttonClasses('secondary', 'md')}
-            onClick={() => setQrOpen(false)}
-          >
+          <button type="button" className={buttonClasses('secondary', 'md')} onClick={() => setQrOpen(false)}>
             Done
           </button>
         }

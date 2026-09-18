@@ -13,20 +13,26 @@ body,
 #root {
   height: 100%;
 }
+
 body {
-  background-color: #f6f7f9;
-  color: #0f172a;
+  background-color: #0B1020;
+  color: #F8FAFC;
   -webkit-font-smoothing: antialiased;
   font-feature-settings: 'cv11', 'ss01';
 }
+
 *:focus-visible {
-  outline: 2px solid #4f46e5;
+  outline: 2px solid #8B5CF6;
   outline-offset: 2px;
 }
+
 ::selection {
-  background-color: #e0e7ff;
+  background-color: rgba(139, 92, 246, 0.25);
+  color: #F8FAFC;
 }
+
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {

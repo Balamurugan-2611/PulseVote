@@ -1,8 +1,8 @@
 export default {
   content: [
-  './index.html',
-  './src/**/*.{js,ts,jsx,tsx}'
-],
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',
+  ],
   theme: {
     extend: {
       fontFamily: {
@@ -18,65 +18,96 @@ export default {
         ],
       },
       colors: {
-        canvas: '#f6f7f9',
+        // ── Page / surface ───────────────────────────────────────────────
+        // canvas  = outermost page background
+        // surface = card / panel background
+        // raised  = elevated surface (modals, dropdowns, tooltips)
+        canvas: '#0B1020',
+        surface: '#151D2E',
+        raised: '#1C2638',
+
+        // ── Text ─────────────────────────────────────────────────────────
         ink: {
-          DEFAULT: '#0f172a',
-          muted: '#5a6478',
-          subtle: '#8b93a5',
+          DEFAULT: '#F8FAFC',   // primary text
+          muted: '#94A3B8',   // secondary / descriptive text
+          subtle: '#64748B',   // de-emphasised / placeholder text
         },
+
+        // ── Borders ──────────────────────────────────────────────────────
         line: {
-          DEFAULT: '#e6e8ee',
-          strong: '#d5d9e2',
+          DEFAULT: '#263449',   // default border
+          strong: '#334D6B',   // stronger border
         },
+
+        // ── Primary brand — violet ────────────────────────────────────────
         brand: {
-          50: '#eef2ff',
-          100: '#e0e7ff',
-          200: '#c7d2fe',
-          300: '#a5b4fc',
-          400: '#818cf8',
-          500: '#6366f1',
-          600: '#4f46e5',
-          700: '#4338ca',
-          800: '#3730a3',
-          900: '#282a67',
+          50: '#F5F3FF',
+          100: '#EDE9FE',
+          200: '#DDD6FE',
+          300: '#C4B5FD',
+          400: '#A78BFA',
+          500: '#8B5CF6',   // primary
+          600: '#7C3AED',   // hover
+          700: '#6D28D9',
+          800: '#5B21B6',
+          900: '#4C1D95',
         },
+
+        // ── Realtime / live — cyan ────────────────────────────────────────
         live: {
-          50: '#ecfdf3',
-          100: '#d1fadf',
-          500: '#16a34a',
-          600: '#15803d',
-          700: '#166534',
+          50: 'rgba(34,211,238,0.08)',
+          100: 'rgba(34,211,238,0.15)',
+          500: '#22D3EE',   // realtime primary
+          600: '#06B6D4',
+          700: '#0891B2',
         },
+
+        // ── Semantic: warning ─────────────────────────────────────────────
         warn: {
-          50: '#fffbeb',
-          100: '#fef3c7',
-          500: '#d97706',
-          600: '#b45309',
+          50: 'rgba(251,191,36,0.10)',
+          100: 'rgba(251,191,36,0.18)',
+          500: '#FBBF24',
+          600: '#F59E0B',
         },
+
+        // ── Semantic: danger / error ──────────────────────────────────────
         danger: {
-          50: '#fef2f2',
-          100: '#fee2e2',
-          500: '#dc2626',
-          600: '#b91c1c',
+          50: 'rgba(251,113,133,0.10)',
+          100: 'rgba(251,113,133,0.18)',
+          500: '#FB7185',
+          600: '#F43F5E',
+        },
+
+        // ── Semantic: success ─────────────────────────────────────────────
+        success: {
+          50: 'rgba(52,211,153,0.10)',
+          100: 'rgba(52,211,153,0.18)',
+          500: '#34D399',
+          600: '#10B981',
+          700: '#059669',
         },
       },
+
       boxShadow: {
-        card: '0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.05)',
-        lift: '0 4px 6px -2px rgba(15, 23, 42, 0.06), 0 12px 24px -8px rgba(15, 23, 42, 0.12)',
-        modal: '0 24px 48px -12px rgba(15, 23, 42, 0.28)',
+        card: '0 1px 2px rgba(0,0,0,0.25), 0 1px 3px rgba(0,0,0,0.30)',
+        lift: '0 4px 6px -2px rgba(0,0,0,0.30), 0 12px 24px -8px rgba(0,0,0,0.45)',
+        modal: '0 24px 48px -12px rgba(0,0,0,0.65)',
       },
+
       transitionTimingFunction: {
         swift: 'cubic-bezier(0.23, 1, 0.32, 1)',
       },
+
       keyframes: {
         'live-ring': {
           '0%': { transform: 'scale(1)', opacity: '0.55' },
           '70%': { transform: 'scale(2.4)', opacity: '0' },
           '100%': { transform: 'scale(2.4)', opacity: '0' },
         },
+        // flash-row: violet-tinted row highlight on vote arrival
         'flash-row': {
-          '0%': { backgroundColor: 'rgba(79, 70, 229, 0.09)' },
-          '100%': { backgroundColor: 'rgba(79, 70, 229, 0)' },
+          '0%': { backgroundColor: 'rgba(139,92,246,0.12)' },
+          '100%': { backgroundColor: 'rgba(139,92,246,0)' },
         },
         'count-bump': {
           '0%': { transform: 'translateY(4px)', opacity: '0' },
@@ -93,11 +124,12 @@ export default {
           '100%': { backgroundPosition: '200% 0' },
         },
       },
+
       animation: {
-        'live-ring': 'live-ring 1.9s cubic-bezier(0.23, 1, 0.32, 1) infinite',
-        'flash-row': 'flash-row 900ms cubic-bezier(0.23, 1, 0.32, 1) forwards',
-        'count-bump': 'count-bump 220ms cubic-bezier(0.23, 1, 0.32, 1)',
-        'delta-rise': 'delta-rise 1800ms cubic-bezier(0.23, 1, 0.32, 1) forwards',
+        'live-ring': 'live-ring 1.9s cubic-bezier(0.23,1,0.32,1) infinite',
+        'flash-row': 'flash-row 900ms cubic-bezier(0.23,1,0.32,1) forwards',
+        'count-bump': 'count-bump 220ms cubic-bezier(0.23,1,0.32,1)',
+        'delta-rise': 'delta-rise 1800ms cubic-bezier(0.23,1,0.32,1) forwards',
         'skeleton-sweep': 'skeleton-sweep 1.6s linear infinite',
       },
     },

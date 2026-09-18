@@ -21,11 +21,7 @@ export function PollCard({ poll, onClose, onDelete }) {
   const isActive = poll.status === 'active';
 
   const copyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(pollUrl(poll.id));
-    } catch {
-      /* clipboard unavailable */
-    }
+    try { await navigator.clipboard.writeText(pollUrl(poll.id)); } catch { /* unavailable */ }
     toast.success('Poll link copied!');
   };
 
@@ -46,14 +42,12 @@ export function PollCard({ poll, onClose, onDelete }) {
       onSelect: copyLink,
     },
     ...(isActive
-      ? [
-          {
-            label: 'Close poll',
-            icon: <LockIcon className="h-4 w-4" aria-hidden="true" />,
-            tone: 'danger',
-            onSelect: () => onClose(poll),
-          },
-        ]
+      ? [{
+        label: 'Close poll',
+        icon: <LockIcon className="h-4 w-4" aria-hidden="true" />,
+        tone: 'danger',
+        onSelect: () => onClose(poll),
+      }]
       : []),
     {
       label: 'Delete poll',
@@ -64,12 +58,12 @@ export function PollCard({ poll, onClose, onDelete }) {
   ];
 
   return (
-    <li className="flex flex-col rounded-xl border border-line bg-white p-5 shadow-card transition-[box-shadow,border-color] duration-150 ease-swift hover:border-brand-200 hover:shadow-lift">
+    <li className="flex flex-col rounded-xl border border-line bg-surface p-5 shadow-card transition-[box-shadow,border-color] duration-150 ease-swift hover:border-brand-500/40 hover:shadow-lift">
       <div className="flex items-start justify-between gap-3">
         <h3 className="text-base font-bold leading-snug tracking-tight text-ink">
           <Link
             to={`/polls/${poll.id}`}
-            className="rounded transition-colors duration-150 ease-swift hover:text-brand-700"
+            className="rounded transition-colors duration-150 ease-swift hover:text-brand-400"
           >
             {poll.question}
           </Link>
@@ -111,7 +105,7 @@ export function PollCard({ poll, onClose, onDelete }) {
           className="ml-auto"
           label={`More actions for ${poll.question}`}
           trigger={() => (
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-ink-muted transition-colors duration-150 ease-swift hover:bg-canvas hover:text-ink">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-ink-muted transition-colors duration-150 ease-swift hover:bg-raised hover:text-ink">
               <MoreHorizontalIcon className="h-4 w-4" aria-hidden="true" />
             </span>
           )}

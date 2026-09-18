@@ -22,11 +22,12 @@ export function PublicPoll() {
   const { getPoll, ensurePoll, castVote, lastEvents } = usePolls();
   const { connectionState } = useAppConfig();
 
-  const [fetchState, setFetchState] = useState('loading'); // 'loading' | 'found' | 'notfound'
+  const [fetchState, setFetchState] = useState('loading');
   const [selected, setSelected] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  // Persist voted state in sessionStorage so a page refresh keeps the result view
-  const [voted, setVoted] = useState(() => Boolean(sessionStorage.getItem(VOTED_KEY(pollId))));
+  const [voted, setVoted] = useState(
+    () => Boolean(sessionStorage.getItem(VOTED_KEY(pollId)))
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -35,9 +36,7 @@ export function PublicPoll() {
       if (cancelled) return;
       setFetchState(poll ? 'found' : 'notfound');
     });
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [pollId, ensurePoll]);
 
   const poll = getPoll(pollId);
@@ -48,7 +47,7 @@ export function PublicPoll() {
       <div className="flex min-h-full w-full flex-col bg-canvas">
         <PublicNav status="active" />
         <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 sm:px-6 sm:py-12">
-          <div className="rounded-2xl border border-line bg-white p-5 shadow-card sm:p-8">
+          <div className="rounded-2xl border border-line bg-surface p-5 shadow-card sm:p-8">
             <Skeleton className="h-3 w-28" />
             <Skeleton className="mt-4 h-7 w-4/5" />
             <div className="mt-8 space-y-3">
@@ -62,9 +61,7 @@ export function PublicPoll() {
     );
   }
 
-  if (fetchState === 'notfound' || !poll) {
-    return <PollNotFound />;
-  }
+  if (fetchState === 'notfound' || !poll) return <PollNotFound />;
 
   const total = totalVotes(poll.options);
   const event = lastEvents[poll.id];
@@ -95,8 +92,9 @@ export function PublicPoll() {
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 sm:px-6 sm:py-12">
         {isClosed ? (
-          <section className="rounded-2xl border border-line bg-white p-5 shadow-card sm:p-8">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-line-strong bg-canvas px-2.5 py-1 text-[11px] font-semibold text-ink-muted">
+          /* ── Closed state ── */
+          <section className="rounded-2xl border border-line bg-surface p-5 shadow-card sm:p-8">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-line-strong bg-raised px-2.5 py-1 text-[11px] font-semibold text-ink-muted">
               <LockIcon className="h-3.5 w-3.5" aria-hidden="true" />
               POLL CLOSED
             </span>
@@ -120,21 +118,23 @@ export function PublicPoll() {
               </div>
             </div>
           </section>
+
         ) : voted ? (
+          /* ── Post-vote results ── */
           <motion.section
             initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
-            className="rounded-2xl border border-line bg-white p-5 text-center shadow-card sm:p-8"
+            className="rounded-2xl border border-line bg-surface p-5 text-center shadow-card sm:p-8"
           >
-            <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-live-50 text-live-600">
+            <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-success-50 text-success-500">
               <CheckIcon className="h-6 w-6" strokeWidth={3} aria-hidden="true" />
             </span>
             <h1 className="mt-5 text-2xl font-extrabold tracking-tight text-ink">
               Vote submitted!
             </h1>
             <p className="mt-2 text-[15px] text-ink-muted">Thanks for participating.</p>
-            <p className="mt-1 text-sm font-medium text-live-600">Results are updating live…</p>
+            <p className="mt-1 text-sm font-medium text-live-500">Results are updating live…</p>
 
             <div className="mt-8 border-t border-line pt-6 text-left">
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -155,9 +155,11 @@ export function PublicPoll() {
               </div>
             </div>
           </motion.section>
+
         ) : (
-          <section className="rounded-2xl border border-line bg-white p-5 shadow-card sm:p-8">
-            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand-600">
+          /* ── Voting state ── */
+          <section className="rounded-2xl border border-line bg-surface p-5 shadow-card sm:p-8">
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand-400">
               Your Vote Matters
             </p>
             <h1 className="mt-3 text-2xl font-extrabold leading-snug tracking-tight text-ink sm:text-[28px]">

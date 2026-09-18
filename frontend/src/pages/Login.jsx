@@ -19,21 +19,17 @@ export function Login() {
   const [authError, setAuthError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Redirect back to the page the user was trying to reach, or dashboard
   const from = location.state?.from?.pathname || '/dashboard';
 
   const submit = async (event) => {
     event.preventDefault();
-
     const nextErrors = {};
     if (!email.trim()) nextErrors.email = 'Email is required.';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
       nextErrors.email = 'Enter a valid email address.';
     if (!password) nextErrors.password = 'Password is required.';
-
     setErrors(nextErrors);
     setAuthError('');
-
     if (Object.keys(nextErrors).length > 0) return;
 
     setLoading(true);
@@ -52,7 +48,7 @@ export function Login() {
       panelTitle="Welcome Back"
       panelText="Sign in to manage your polls, share links with your audience, and watch results arrive live."
     >
-      <div className="rounded-xl border border-line bg-white p-6 shadow-card sm:p-8">
+      <div className="rounded-xl border border-line bg-surface p-6 shadow-card sm:p-8">
         <h1 className="text-2xl font-extrabold tracking-tight text-ink">Welcome Back</h1>
         <p className="mt-2 text-sm text-ink-muted">Sign in to manage your polls.</p>
 
@@ -61,11 +57,8 @@ export function Login() {
             role="alert"
             className="mt-5 flex items-start gap-2.5 rounded-lg border border-danger-100 bg-danger-50 px-4 py-3"
           >
-            <AlertCircleIcon
-              className="mt-0.5 h-4 w-4 shrink-0 text-danger-600"
-              aria-hidden="true"
-            />
-            <p className="text-sm font-semibold text-danger-600">{authError}</p>
+            <AlertCircleIcon className="mt-0.5 h-4 w-4 shrink-0 text-danger-500" aria-hidden="true" />
+            <p className="text-sm font-semibold text-danger-500">{authError}</p>
           </div>
         ) : null}
 
@@ -79,7 +72,6 @@ export function Login() {
             error={errors.email}
             onChange={(e) => setEmail(e.target.value)}
           />
-
           <PasswordInput
             label="Password"
             autoComplete="current-password"
@@ -94,7 +86,7 @@ export function Login() {
               type="checkbox"
               checked={remember}
               onChange={(e) => setRemember(e.target.checked)}
-              className="h-4 w-4 rounded border-line-strong text-brand-600 focus:ring-brand-200"
+              className="h-4 w-4 rounded border-line-strong bg-raised text-brand-500 focus:ring-brand-500/20"
             />
             Remember me
           </label>
@@ -106,7 +98,7 @@ export function Login() {
 
         <p className="mt-6 text-center text-sm text-ink-muted">
           Don&apos;t have an account?{' '}
-          <Link to="/signup" className="font-semibold text-brand-600 hover:text-brand-700">
+          <Link to="/signup" className="font-semibold text-brand-400 hover:text-brand-300">
             Create an account
           </Link>
         </p>

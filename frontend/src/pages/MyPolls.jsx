@@ -24,14 +24,11 @@ export function MyPolls() {
   const [deleting, setDeleting] = useState(false);
 
   const visiblePolls = useMemo(
-    () =>
-      polls.filter((poll) => {
-        const matchesFilter = filter === 'all' || poll.status === filter;
-        const matchesQuery = poll.question
-          .toLowerCase()
-          .includes(query.trim().toLowerCase());
-        return matchesFilter && matchesQuery;
-      }),
+    () => polls.filter((poll) => {
+      const matchesFilter = filter === 'all' || poll.status === filter;
+      const matchesQuery = poll.question.toLowerCase().includes(query.trim().toLowerCase());
+      return matchesFilter && matchesQuery;
+    }),
     [polls, filter, query]
   );
 
@@ -78,9 +75,7 @@ export function MyPolls() {
 
         {!ready ? (
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <PollCardSkeleton />
-            <PollCardSkeleton />
-            <PollCardSkeleton />
+            <PollCardSkeleton /><PollCardSkeleton /><PollCardSkeleton />
           </div>
         ) : visiblePolls.length === 0 ? (
           <div className="mt-6">
@@ -93,10 +88,7 @@ export function MyPolls() {
                   <button
                     type="button"
                     className={buttonClasses('secondary', 'md')}
-                    onClick={() => {
-                      setQuery('');
-                      setFilter('all');
-                    }}
+                    onClick={() => { setQuery(''); setFilter('all'); }}
                   >
                     Clear filters
                   </button>
@@ -107,23 +99,14 @@ export function MyPolls() {
                 icon={<ListChecksIcon className="h-5 w-5" aria-hidden="true" />}
                 title="No polls yet"
                 description="Create your first poll to start collecting votes."
-                action={
-                  <Link to="/create" className={buttonClasses('primary', 'md')}>
-                    Create Poll
-                  </Link>
-                }
+                action={<Link to="/create" className={buttonClasses('primary', 'md')}>Create Poll</Link>}
               />
             )}
           </div>
         ) : (
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {visiblePolls.map((poll) => (
-              <PollCard
-                key={poll.id}
-                poll={poll}
-                onClose={setPollToClose}
-                onDelete={setPollToDelete}
-              />
+              <PollCard key={poll.id} poll={poll} onClose={setPollToClose} onDelete={setPollToDelete} />
             ))}
           </ul>
         )}

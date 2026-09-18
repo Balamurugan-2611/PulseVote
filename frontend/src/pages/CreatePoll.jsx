@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AlertCircleIcon, PlusIcon, Trash2Icon } from 'lucide-react';
 import { toast } from 'sonner';
+import { twMerge } from 'tailwind-merge';
 import { AppNav } from '../components/layout/AppNav';
 import { Button, buttonClasses } from '../components/ui/Button';
 import { inputClasses, inputErrorClasses } from '../components/ui/Input';
-import { twMerge } from 'tailwind-merge';
 import { usePolls } from '../contexts/PollsContext';
 
 function draft(value = '') {
@@ -32,26 +32,19 @@ export function CreatePoll() {
 
   const submit = async (event) => {
     event.preventDefault();
-
     const nextOptionErrors = {};
     options.forEach((o) => {
       if (!o.value.trim()) nextOptionErrors[o.key] = 'Option cannot be empty.';
     });
-
     const filled = options.filter((o) => o.value.trim().length > 0);
     setQuestionError(question.trim() ? '' : 'Question is required.');
     setOptionErrors(nextOptionErrors);
     setFormError(filled.length < 2 ? 'Please add at least two options.' : '');
-
     if (!question.trim() || Object.keys(nextOptionErrors).length > 0 || filled.length < 2) return;
 
     setLoading(true);
     try {
-      const poll = await createPoll({
-        question,
-        options: filled.map((o) => o.value),
-        allowOneVote,
-      });
+      const poll = await createPoll({ question, options: filled.map((o) => o.value), allowOneVote });
       toast.success('Poll created successfully!');
       navigate(`/polls/${poll.id}/created`);
     } catch (err) {
@@ -74,8 +67,8 @@ export function CreatePoll() {
         </p>
 
         <form onSubmit={submit} noValidate className="mt-8 space-y-5">
-          {/* Question */}
-          <section className="rounded-xl border border-line bg-white p-5 shadow-card sm:p-6">
+          {/* Question + options */}
+          <section className="rounded-xl border border-line bg-surface p-5 shadow-card sm:p-6">
             <label htmlFor="poll-question" className="block text-sm font-bold text-ink">
               Question
             </label>
@@ -87,23 +80,15 @@ export function CreatePoll() {
               placeholder="What programming language do you prefer?"
               aria-invalid={questionError ? true : undefined}
               aria-describedby={questionError ? 'poll-question-error' : undefined}
-              className={twMerge(
-                inputClasses,
-                'mt-3 h-12 text-[15px]',
-                questionError ? inputErrorClasses : ''
-              )}
+              className={twMerge(inputClasses, 'mt-3 h-12 text-[15px]', questionError ? inputErrorClasses : '')}
             />
             {questionError ? (
-              <p
-                id="poll-question-error"
-                className="mt-2 flex items-center gap-1.5 text-xs font-medium text-danger-600"
-              >
+              <p id="poll-question-error" className="mt-2 flex items-center gap-1.5 text-xs font-medium text-danger-500">
                 <AlertCircleIcon className="h-3.5 w-3.5" aria-hidden="true" />
                 {questionError}
               </p>
             ) : null}
 
-            {/* Options */}
             <div className="mt-8">
               <h2 className="text-sm font-bold text-ink">Answer Options</h2>
               <p className="mt-1 text-xs text-ink-subtle">At least two options are required.</p>
@@ -116,24 +101,17 @@ export function CreatePoll() {
                         Option {index + 1}
                       </span>
                       <div className="flex-1">
-                        <label className="sr-only" htmlFor={`option-${option.key}`}>
-                          Option {index + 1}
-                        </label>
+                        <label className="sr-only" htmlFor={`option-${option.key}`}>Option {index + 1}</label>
                         <input
                           id={`option-${option.key}`}
                           value={option.value}
                           onChange={(e) => updateOption(option.key, e.target.value)}
-                          placeholder={`e.g. ${
-                            ['Java', 'Python', 'JavaScript', 'C++'][index] ?? 'Another option'
-                          }`}
+                          placeholder={`e.g. ${['Java', 'Python', 'JavaScript', 'C++'][index] ?? 'Another option'}`}
                           aria-invalid={optionErrors[option.key] ? true : undefined}
-                          className={twMerge(
-                            inputClasses,
-                            optionErrors[option.key] ? inputErrorClasses : ''
-                          )}
+                          className={twMerge(inputClasses, optionErrors[option.key] ? inputErrorClasses : '')}
                         />
                         {optionErrors[option.key] ? (
-                          <p className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-danger-600">
+                          <p className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-danger-500">
                             <AlertCircleIcon className="h-3.5 w-3.5" aria-hidden="true" />
                             {optionErrors[option.key]}
                           </p>
@@ -144,7 +122,7 @@ export function CreatePoll() {
                         onClick={() => removeOption(option.key)}
                         disabled={options.length <= 2}
                         aria-label={`Remove option ${index + 1}`}
-                        className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-line text-ink-subtle transition-colors duration-150 ease-swift hover:border-danger-100 hover:bg-danger-50 hover:text-danger-600 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-line disabled:hover:bg-transparent disabled:hover:text-ink-subtle"
+                        className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-line text-ink-subtle transition-colors duration-150 ease-swift hover:border-danger-100 hover:bg-danger-50 hover:text-danger-500 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-line disabled:hover:bg-transparent disabled:hover:text-ink-subtle"
                       >
                         <Trash2Icon className="h-4 w-4" aria-hidden="true" />
                       </button>
@@ -165,14 +143,14 @@ export function CreatePoll() {
           </section>
 
           {/* Settings */}
-          <section className="rounded-xl border border-line bg-white p-5 shadow-card sm:p-6">
+          <section className="rounded-xl border border-line bg-surface p-5 shadow-card sm:p-6">
             <h2 className="text-sm font-bold text-ink">Poll Settings</h2>
             <label className="mt-4 flex items-start gap-3 text-sm">
               <input
                 type="checkbox"
                 checked={allowOneVote}
                 onChange={(e) => setAllowOneVote(e.target.checked)}
-                className="mt-0.5 h-4 w-4 rounded border-line-strong text-brand-600 focus:ring-brand-200"
+                className="mt-0.5 h-4 w-4 rounded border-line-strong bg-raised text-brand-500 focus:ring-brand-500/20"
               />
               <span>
                 <span className="font-semibold text-ink">Allow one vote per participant</span>
@@ -184,19 +162,14 @@ export function CreatePoll() {
           </section>
 
           {formError ? (
-            <div
-              role="alert"
-              className="flex items-center gap-2.5 rounded-lg border border-danger-100 bg-danger-50 px-4 py-3"
-            >
-              <AlertCircleIcon className="h-4 w-4 shrink-0 text-danger-600" aria-hidden="true" />
-              <p className="text-sm font-semibold text-danger-600">{formError}</p>
+            <div role="alert" className="flex items-center gap-2.5 rounded-lg border border-danger-100 bg-danger-50 px-4 py-3">
+              <AlertCircleIcon className="h-4 w-4 shrink-0 text-danger-500" aria-hidden="true" />
+              <p className="text-sm font-semibold text-danger-500">{formError}</p>
             </div>
           ) : null}
 
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-            <Link to="/dashboard" className={buttonClasses('secondary', 'lg')}>
-              Cancel
-            </Link>
+            <Link to="/dashboard" className={buttonClasses('secondary', 'lg')}>Cancel</Link>
             <Button type="submit" size="lg" loading={loading} loadingLabel="Creating Poll…">
               Create Poll
             </Button>

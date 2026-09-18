@@ -51,7 +51,7 @@ export const initialPolls = [
     },
     {
         id: 'e55rt10',
-        question: 'How did you hear about LivePoll?',
+        question: 'How did you hear about PulseVote?',
         createdAt: '2026-08-29',
         status: 'closed',
         allowOneVote: true,
@@ -70,15 +70,15 @@ export const dashboardStats = {
 export const currentUser = {
     name: 'Surya Menon',
     firstName: 'Surya',
-    email: 'surya@livepoll.app',
+    email: 'surya@pulsevote.app',
     initials: 'SM'
 };
 export const heroPoll = {
-    question: 'Which programming language do you prefer?',
+    question: 'What do you enjoy most on a weekend?',
     options: [
-        { id: 'o1', label: 'Java', votes: 54 },
-        { id: 'o2', label: 'Python', votes: 40 },
-        { id: 'o3', label: 'JavaScript', votes: 24 },
-        { id: 'o4', label: 'C++', votes: 10 }
+        { id: 'o1', label: 'Watching Movies', votes: 94 },
+        { id: 'o2', label: 'Travelling', votes: 76 },
+        { id: 'o3', label: 'Gaming', votes: 55 },
+        { id: 'o4', label: 'Cooking', votes: 28 }
     ]
 };

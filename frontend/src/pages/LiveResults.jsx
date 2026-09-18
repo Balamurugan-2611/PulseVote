@@ -20,7 +20,6 @@ export function LiveResults() {
   const { pollId } = useParams();
   const { getPoll, ensurePoll, lastEvents } = usePolls();
   const { connectionState } = useAppConfig();
-
   const [fetchState, setFetchState] = useState('loading');
 
   useEffect(() => {
@@ -30,9 +29,7 @@ export function LiveResults() {
       if (cancelled) return;
       setFetchState(poll ? 'found' : 'notfound');
     });
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [pollId, ensurePoll]);
 
   const poll = getPoll(pollId);
@@ -55,20 +52,16 @@ export function LiveResults() {
         <AppNav />
         <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-8 sm:px-6 lg:py-12">
           <Skeleton className="h-8 w-64" />
-          <div className="mt-8 rounded-2xl border border-line bg-white p-5 shadow-card sm:p-8">
+          <div className="mt-8 rounded-2xl border border-line bg-surface p-5 shadow-card sm:p-8">
             <Skeleton className="h-16 w-32" />
-            <div className="mt-7">
-              <ResultsSkeleton rows={3} />
-            </div>
+            <div className="mt-7"><ResultsSkeleton rows={3} /></div>
           </div>
         </main>
       </div>
     );
   }
 
-  if (fetchState === 'notfound' || !poll) {
-    return <PollNotFound />;
-  }
+  if (fetchState === 'notfound' || !poll) return <PollNotFound />;
 
   const total = totalVotes(poll.options);
   const isActive = poll.status === 'active';
@@ -77,7 +70,8 @@ export function LiveResults() {
     <div className="flex min-h-full w-full flex-col bg-canvas">
       <AppNav />
 
-      <div className="border-b border-line bg-white">
+      {/* Sub-nav bar */}
+      <div className="border-b border-line bg-surface">
         <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <Link
             to={`/polls/${poll.id}`}
@@ -92,7 +86,7 @@ export function LiveResults() {
 
       <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-8 sm:px-6 lg:py-12">
         <header>
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-600">
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-live-500">
             {isActive ? 'Live Results' : 'Final Results'}
           </p>
           <h1 className="mt-3 text-[30px] font-extrabold leading-[1.1] tracking-tight text-ink sm:text-[40px]">
@@ -100,7 +94,7 @@ export function LiveResults() {
           </h1>
         </header>
 
-        <section className="mt-8 rounded-2xl border border-line bg-white p-5 shadow-card sm:p-8">
+        <section className="mt-8 rounded-2xl border border-line bg-surface p-5 shadow-card sm:p-8">
           <div className="flex flex-wrap items-end justify-between gap-4 border-b border-line pb-6">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-wider text-ink-subtle">
@@ -126,7 +120,7 @@ export function LiveResults() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
-                    className="rounded-full border border-live-100 bg-live-50 px-3 py-1.5 text-xs font-bold text-live-700"
+                    className="rounded-full border border-live-100 bg-live-50 px-3 py-1.5 text-xs font-bold text-live-500"
                   >
                     +1 vote
                   </motion.span>
@@ -151,18 +145,14 @@ export function LiveResults() {
             {isActive ? (
               <ConnectionStatus size="sm" />
             ) : (
-              <p className="text-sm font-medium text-ink-muted">
-                Voting is no longer available.
-              </p>
+              <p className="text-sm font-medium text-ink-muted">Voting is no longer available.</p>
             )}
             <div className="flex flex-wrap gap-2">
               <Link to={`/poll/${poll.id}`} className={buttonClasses('secondary', 'sm')}>
-                <UsersIcon className="h-4 w-4" aria-hidden="true" />
-                Audience view
+                <UsersIcon className="h-4 w-4" aria-hidden="true" /> Audience view
               </Link>
               <Link to={`/polls/${poll.id}`} className={buttonClasses('secondary', 'sm')}>
-                <SettingsIcon className="h-4 w-4" aria-hidden="true" />
-                Manage
+                <SettingsIcon className="h-4 w-4" aria-hidden="true" /> Manage
               </Link>
             </div>
           </div>

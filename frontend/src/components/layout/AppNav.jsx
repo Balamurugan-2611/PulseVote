@@ -25,11 +25,12 @@ const links = [
 function linkClasses(isActive) {
   return twMerge(
     'rounded-lg px-3 py-2 text-sm font-semibold transition-colors duration-150 ease-swift',
-    isActive ? 'bg-brand-50 text-brand-700' : 'text-ink-muted hover:bg-canvas hover:text-ink'
+    isActive
+      ? 'bg-brand-500/15 text-brand-400'
+      : 'text-ink-muted hover:bg-raised hover:text-ink'
   );
 }
 
-/** Derive initials from a full name string. */
 function initials(name = '') {
   return name
     .split(' ')
@@ -71,9 +72,9 @@ export function AppNav() {
   ];
 
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-white/90 backdrop-blur">
+    <header className="sticky top-0 z-30 border-b border-line bg-surface/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6">
-        <Link to="/dashboard" aria-label="LivePoll dashboard">
+        <Link to="/dashboard" aria-label="PulseVote dashboard">
           <Logo />
         </Link>
 
@@ -96,8 +97,8 @@ export function AppNav() {
             trigger={({ open }) => (
               <span
                 className={twMerge(
-                  'flex items-center gap-2 rounded-lg border border-line px-2 py-1.5 transition-colors duration-150 ease-swift hover:bg-canvas',
-                  open ? 'bg-canvas' : 'bg-white'
+                  'flex items-center gap-2 rounded-lg border border-line px-2 py-1.5 transition-colors duration-150 ease-swift hover:bg-raised',
+                  open ? 'bg-raised' : 'bg-surface'
                 )}
               >
                 <Avatar initials={displayInitials} name={displayName} size="sm" />
@@ -120,7 +121,7 @@ export function AppNav() {
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((prev) => !prev)}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-line text-ink-muted transition-colors duration-150 ease-swift hover:bg-canvas md:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-line text-ink-muted transition-colors duration-150 ease-swift hover:bg-raised md:hidden"
           >
             {mobileOpen ? (
               <XIcon className="h-5 w-5" aria-hidden="true" />
@@ -139,7 +140,7 @@ export function AppNav() {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-            className="overflow-hidden border-t border-line bg-white md:hidden"
+            className="overflow-hidden border-t border-line bg-surface md:hidden"
           >
             <div className="flex flex-col gap-1 p-3">
               {links.map((link) => (
@@ -147,9 +148,7 @@ export function AppNav() {
                   key={link.to}
                   to={link.to}
                   onClick={() => setMobileOpen(false)}
-                  className={({ isActive }) =>
-                    twMerge(linkClasses(isActive), 'py-3 text-base')
-                  }
+                  className={({ isActive }) => twMerge(linkClasses(isActive), 'py-3 text-base')}
                 >
                   {link.label}
                 </NavLink>
