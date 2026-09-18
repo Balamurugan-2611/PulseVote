@@ -52,10 +52,8 @@ The architecture separates the user interface, application logic, persistent sto
 
 📁 Project Structure
 PulseVote/
-│
 ├── backend/
 │   ├── cmd/
-│   ├── ...
 │   ├── .env.example
 │   └── go.mod
 │
@@ -196,25 +194,49 @@ go build -o livepoll.exe ./cmd/server
 
 PulseVote is designed around live poll interaction.
 
-A typical voting flow is:
+⚡ Real-Time Polling Flow
 
-User
-  │
-  ▼
-Frontend
-  │
-  ▼
-Backend
-  │
-  ├────► MongoDB
-  │
-  └────► Redis / Real-Time Layer
-             │
-             ▼
-        Connected Clients
-             │
-             ▼
-        Updated Results
+A typical voting flow looks like this:
+
+                    ┌─────────────┐
+                    │    User     │
+                    └──────┬──────┘
+                           │
+                           ▼
+                    ┌─────────────┐
+                    │  Frontend   │
+                    │ React + UI  │
+                    └──────┬──────┘
+                           │
+                           ▼
+                    ┌─────────────┐
+                    │   Backend   │
+                    │     Go      │
+                    └──────┬──────┘
+                           │
+                  ┌────────┴────────┐
+                  │                 │
+                  ▼                 ▼
+           ┌─────────────┐   ┌─────────────┐
+           │  MongoDB    │   │    Redis    │
+           │ Persistent  │   │ Real-Time   │
+           │   Storage   │   │    Layer    │
+           └─────────────┘   └──────┬──────┘
+                                    │
+                                    ▼
+                            ┌─────────────┐
+                            │  Connected  │
+                            │   Clients   │
+                            └──────┬──────┘
+                                   │
+                                   ▼
+                            ┌─────────────┐
+                            │   Updated   │
+                            │   Results   │
+                            └─────────────┘
+
+
+Votes are processed by the backend, persisted in MongoDB, and propagated through the real-time layer so connected clients can receive updated poll results without manually refreshing the page.
 
 
 This allows participants to see changes to poll results without relying on repeated manual refreshes.
