@@ -1,336 +1,443 @@
-PulseVote
+⚡ PulseVote
 
-Real-time polling. Instant responses. Live results.
+Ask. Vote. See It Happen.
 
-PulseVote is a real-time polling platform that lets users create polls, share them with others, collect votes, and watch results update live.
+PulseVote is a real-time polling platform built for fast, interactive voting experiences. Create a poll, share it with your audience, and watch responses appear live across connected clients.
 
-Built with a modern web interface and a real-time backend architecture, PulseVote focuses on making live audience interaction simple, fast, and responsive.
+Designed with a modern dark interface and a real-time backend architecture, PulseVote combines a React frontend with a Go API, MongoDB persistence, Redis-powered communication, and WebSocket updates.
 
-✨ Features
+🚀 What is PulseVote?
 
-📊 Create Polls — Create custom polls with multiple voting options.
+Traditional polling experiences often require users to refresh a page to see updated results.
 
-⚡ Live Results — View poll results as votes are submitted.
+PulseVote removes that friction.
 
-🗳️ Real-Time Voting — Votes are reflected without requiring manual page refreshes.
+When a participant submits a vote, the result can propagate through the real-time system and update connected browsers automatically.
 
-🔐 User Authentication — Secure user registration and login.
+Create → Share → Vote → Broadcast → Update
 
-📱 Responsive Interface — Designed to work across desktop, tablet, and mobile screens.
 
-📈 Result Visualization — Clear visual representation of voting percentages and totals.
+No manual refresh required.
 
-🔗 Poll Sharing — Share polls with participants through the application.
+✨ Core Capabilities
+Capability	Description
+⚡ Live Results	Poll results update in connected clients as votes arrive
+🗳️ Poll Creation	Create polls with multiple answer options
+🔗 Shareable Polls	Each poll can be shared through a public voting URL
+📊 Result Visualization	Vote counts and percentages are displayed visually
+🔴 Live Status	Real-time connection state is visible within the interface
+🔐 Authentication	User accounts with protected application areas
+👤 Profile Management	Manage profile information and account settings
+📋 Poll Management	Create, monitor, close, and delete polls
+📱 Responsive UI	Designed for desktop, tablet, and mobile screens
+🎨 Dark Interface	Modern dark theme with vibrant accent colors
+🧰 Technology Stack
+Frontend
+Technology	Role
+React	Component-based user interface
+Vite	Development server and production build tooling
+Tailwind CSS	Utility-based styling
+React Router	Client-side navigation
+Framer Motion	UI animations and transitions
+Lucide React	Interface icons
+Sonner	Toast notifications
+QRCode	Client-side QR code generation
+Backend
+Technology	Role
+Go	Backend application
+Gin	HTTP routing and middleware
+MongoDB	Persistent application data
+Redis	Real-time messaging / pub-sub
+WebSocket	Live client updates
+JWT	Authentication
+bcrypt / x/crypto	Password hashing
+godotenv	Environment configuration
+🏗️ System Architecture
 
-⚙️ Poll Management — Manage and monitor created polls.
+PulseVote separates the presentation layer from the application and real-time infrastructure.
 
-🟢 Connection Status — Real-time connection indicators help users understand the live connection state.
+                         ┌─────────────────┐
+                         │      User       │
+                         └────────┬────────┘
+                                  │
+                                  ▼
+                         ┌─────────────────┐
+                         │ React Frontend  │
+                         │   Vite + UI     │
+                         └────────┬────────┘
+                                  │
+                         HTTP / WebSocket
+                                  │
+                                  ▼
+                         ┌─────────────────┐
+                         │   Go Backend    │
+                         │  Gin + JWT      │
+                         └───────┬─┬───────┘
+                                 │ │
+                    ┌────────────┘ └────────────┐
+                    ▼                           ▼
+             ┌──────────────┐           ┌──────────────┐
+             │   MongoDB    │           │    Redis     │
+             │  Persistent  │           │   Pub/Sub    │
+             │    Data      │           │ Real-Time    │
+             └──────────────┘           └──────┬───────┘
+                                               │
+                                               ▼
+                                      ┌─────────────────┐
+                                      │ WebSocket Hub   │
+                                      └────────┬────────┘
+                                               │
+                                               ▼
+                                      Connected Browsers
 
-🎨 Modern Dark UI — A dark, tech-focused interface with vibrant real-time accents.
+🔄 Live Voting Pipeline
 
-🛠️ Tech Stack
-Layer	Technology
-Frontend	React
-Build Tool	Vite
-Styling	Tailwind CSS
-Backend	Go
-Database	MongoDB
-Real-Time / Cache	Redis
-Authentication	JWT
-Package Management	npm
-🏗️ Architecture
+A vote moves through the system approximately like this:
 
-PulseVote follows a frontend/backend architecture where the frontend communicates with the Go backend for application operations while MongoDB provides persistent data storage and Redis supports real-time application functionality.
+Participant
+    │
+    │ Submit Vote
+    ▼
+React Application
+    │
+    │ POST request
+    ▼
+Go API
+    │
+    ├──────────────► MongoDB
+    │                  │
+    │                  └── Store / update vote data
+    │
+    └──────────────► Redis
+                       │
+                       │ Publish event
+                       ▼
+                  WebSocket Hub
+                       │
+                       │ Broadcast
+                       ▼
+                Connected Clients
+                       │
+                       ▼
+                Updated Results
 
-User
-React Frontend
-Go Backend API
-(MongoDB)
-(Redis)
 
-The architecture separates the user interface, application logic, persistent storage, and real-time infrastructure.
+This architecture allows multiple connected browsers to receive live poll updates without repeatedly requesting the server for the latest results.
 
-📁 Project Structure
+📁 Project Layout
+PulseVote/
+│
+├── backend/
+│   ├── cmd/
+│   │   └── server/
+│   │       └── main.go
+│   │
+│   ├── config/
+│   │   └── config.go
+│   │
+│   ├── handlers/
+│   │   └── handlers.go
+│   │
+│   ├── middleware/
+│   │   └── auth.go
+│   │
+│   ├── models/
+│   │   └── models.go
+│   │
+│   ├── realtime/
+│   │   └── hub.go
+│   │
+│   ├── routes/
+│   │   └── routes.go
+│   │
+│   ├── .env.example
+│   ├── go.mod
+│   └── go.sum
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── layout/
+│   │   │   ├── poll/
+│   │   │   └── ui/
+│   │   │
+│   │   ├── contexts/
+│   │   ├── hooks/
+│   │   ├── lib/
+│   │   ├── pages/
+│   │   ├── utils/
+│   │   ├── App.jsx
+│   │   └── index.jsx
+│   │
+│   ├── .env.example
+│   ├── index.html
+│   ├── package.json
+│   ├── tailwind.config.js
+│   └── vite.config.js
+│
+├── .gitignore
+└── README.md
 
+🔐 Authentication
+
+PulseVote uses token-based authentication to protect user-specific functionality.
+
+Authentication covers:
+
+Account registration
+
+User login
+
+Protected application routes
+
+Session persistence
+
+Profile updates
+
+Password changes
+
+Account management
+
+Protected pages redirect unauthenticated users to the login screen before returning them to their intended destination.
+
+📊 Poll Lifecycle
+
+A typical poll follows this lifecycle:
+
+        ┌─────────────┐
+        │ Create Poll │
+        └──────┬──────┘
+               │
+               ▼
+        ┌─────────────┐
+        │    Share    │
+        └──────┬──────┘
+               │
+               ▼
+        ┌─────────────┐
+        │    Voting   │
+        │    Active   │
+        └──────┬──────┘
+               │
+               ▼
+        ┌─────────────┐
+        │ Live Results│
+        └──────┬──────┘
+               │
+               ▼
+        ┌─────────────┐
+        │    Closed   │
+        └─────────────┘
+
+🌐 Application Routes
+Route	Access	Purpose
+/	Public	PulseVote landing page
+/signup	Public	Create an account
+/login	Public	Sign in
+/poll/:id	Public	Participate in a poll
+/poll-not-found	Public	Invalid or unavailable poll
+/dashboard	Protected	Poll overview and statistics
+/polls	Protected	Manage created polls
+/create	Protected	Create a new poll
+/polls/:id	Protected	Poll management and results
+/polls/:id/results	Protected	Live results view
+/polls/:id/created	Protected	Share and QR experience
+/profile	Protected	Profile management
+/settings	Protected	Account and security settings
+⚙️ Configuration
 Backend
 
-backend/cmd/ — Application entry points
+Create your environment file from the provided example:
 
-backend/.env.example — Environment configuration template
+cd backend
+Copy-Item .env.example .env
 
-backend/go.mod — Go module definition
+
+Configure:
+
+MONGO_URI=mongodb://localhost:27017
+MONGO_DATABASE=livepoll
+REDIS_URL=localhost:6379
+JWT_SECRET=your-secure-secret
+PORT=8081
+FRONTEND_URL=http://localhost:5173
 
 Frontend
 
-frontend/src/components/ — Reusable UI components
+Create the frontend environment file:
 
-frontend/src/pages/ — Application pages
+cd frontend
+Copy-Item .env.example .env
 
-frontend/src/data/ — Poll/demo data
 
-frontend/package.json — Frontend dependencies and scripts
+Configure the API endpoint required by your application.
 
-frontend/tailwind.config.js — Tailwind CSS configuration
+Never commit real .env files, passwords, tokens, or production credentials.
 
-Root
+💻 Local Development
+Requirements
 
-.gitignore — Git ignore rules
+Install the following before running PulseVote:
 
-README.md — Project documentation
-
-🚀 Getting Started
-Prerequisites
-
-Make sure the following are installed:
+Go
 
 Node.js
 
 npm
 
-Go
-
 MongoDB
 
 Redis
 
-1. Clone the repository
-git clone https://github.com/Balamurugan-2611/PulseVote.git
-cd PulseVote
+Start the backend
 
-2. Configure the backend
-
-Navigate to the backend:
-
-cd backend
-
-
-Create your environment file using .env.example as a reference.
-
-Example:
-
-MONGO_URI=your_mongodb_connection_string
-MONGO_DATABASE=livepoll
-REDIS_URL=localhost:6379
-JWT_SECRET=your_secret_here
-PORT=8081
-FRONTEND_URL=http://localhost:5173
-
-
-Never commit real credentials or secrets to GitHub.
-
-3. Start MongoDB
-
-Make sure MongoDB is running locally and accessible through the connection string configured in your .env.
-
-The default application database is:
-
-livepoll
-
-4. Start Redis
-
-Make sure Redis is running on:
-
-localhost:6379
-
-5. Start the backend
-
-From the backend directory:
+From backend/:
 
 go run ./cmd/server
 
 
-The backend runs on:
+The development API is configured to run on:
 
 http://localhost:8081
 
-6. Install frontend dependencies
+Start the frontend
 
-Open another terminal:
+From frontend/:
 
-cd frontend
 npm install
-
-7. Start the frontend
 npm run dev
 
 
-The Vite development server will normally be available at:
+Vite will provide the local development URL, normally:
 
 http://localhost:5173
 
+🧪 Production Build
 
-Open the address in your browser.
+Build the frontend with:
 
-🔐 Environment Variables
-
-The backend uses environment variables for configuration.
-
-Variable	Purpose
-MONGO_URI	MongoDB connection string
-MONGO_DATABASE	MongoDB database name
-REDIS_URL	Redis server address
-JWT_SECRET	Secret used for JWT authentication
-PORT	Backend server port
-FRONTEND_URL	Frontend origin used by the backend
-
-Example:
-
-MONGO_URI=your_mongodb_connection_string
-MONGO_DATABASE=livepoll
-REDIS_URL=localhost:6379
-JWT_SECRET=your_secret_here
-PORT=8081
-FRONTEND_URL=http://localhost:5173
-
-🧪 Development
-Frontend
 cd frontend
-npm install
-npm run dev
-
-Frontend production build
 npm run build
 
-Backend
-cd backend
-go run ./cmd/server
 
-Backend build
-go build -o livepoll.exe ./cmd/server
+The generated production assets are placed in:
 
-⚡ Real-Time Polling
-
-PulseVote is designed around live poll interaction.
-
-⚡ Real-Time Polling Flow
-
-A typical voting flow looks like this:
-
-                    ┌─────────────┐
-                    │    User     │
-                    └──────┬──────┘
-                           │
-                           ▼
-                    ┌─────────────┐
-                    │  Frontend   │
-                    │ React + UI  │
-                    └──────┬──────┘
-                           │
-                           ▼
-                    ┌─────────────┐
-                    │   Backend   │
-                    │     Go      │
-                    └──────┬──────┘
-                           │
-                  ┌────────┴────────┐
-                  │                 │
-                  ▼                 ▼
-           ┌─────────────┐   ┌─────────────┐
-           │  MongoDB    │   │    Redis    │
-           │ Persistent  │   │ Real-Time   │
-           │   Storage   │   │    Layer    │
-           └─────────────┘   └──────┬──────┘
-                                    │
-                                    ▼
-                            ┌─────────────┐
-                            │  Connected  │
-                            │   Clients   │
-                            └──────┬──────┘
-                                   │
-                                   ▼
-                            ┌─────────────┐
-                            │   Updated   │
-                            │   Results   │
-                            └─────────────┘
+frontend/dist/
 
 
-Votes are processed by the backend, persisted in MongoDB, and propagated through the real-time layer so connected clients can receive updated poll results without manually refreshing the page.
+You can preview the production build locally with:
+
+npm run preview
+
+🗄️ Data Layer
+
+MongoDB provides persistent storage for application entities such as:
+
+Users
+Polls
+Options
+Votes
 
 
-This allows participants to see changes to poll results without relying on repeated manual refreshes.
+Redis is used as the real-time communication layer for distributing poll events between the backend and connected WebSocket clients.
 
-🎨 Interface
+🔌 Real-Time Communication
 
-PulseVote uses a modern dark interface designed around live interaction.
+PulseVote uses WebSocket connections for live result delivery.
 
-Design direction
+The frontend maintains a live connection while viewing real-time poll information.
 
-Dark-first visual system
+If the connection is interrupted, the client can attempt to reconnect automatically rather than requiring a complete page reload.
 
-Indigo and cyan accent colors
+The result experience is therefore designed around:
 
-High-contrast result visualization
+Vote
+ ↓
+Server Update
+ ↓
+Real-Time Event
+ ↓
+Connected Clients
+ ↓
+Animated Result Update
 
-Responsive layouts
+🛡️ Security Considerations
 
-Real-time status indicators
+PulseVote includes several security-oriented mechanisms:
 
-Modern card-based components
+JWT-based authentication
 
-Smooth interface transitions
+Password hashing
 
-🔒 Security
+Protected application routes
 
-For local development and production deployments:
+Server-side authentication middleware
 
-Never commit .env files containing secrets.
+Environment-based configuration
 
-Use a strong, unique JWT_SECRET.
+Account management controls
 
-Use secure MongoDB credentials in production.
+Validation of poll operations
 
-Configure the production frontend origin correctly.
+Vote handling and deduplication logic
 
-Use HTTPS in production.
+For production deployments, configure secure secrets, HTTPS, database authentication, and an exact frontend origin.
 
-Avoid exposing database or Redis services directly to the public internet.
+🧑‍💻 Development Workflow
 
-🤝 Contributing
+For contributors:
 
-Contributions are welcome.
-
-Development workflow
-
-Fork the repository.
-
-Clone your fork.
-
-Create a feature branch.
-
+# Create a feature branch
 git checkout -b feature/your-feature
 
+# Make your changes
 
-Make your changes.
+# Check the frontend
+npm run build
 
-Test the frontend and backend.
+# Check your changes
+git status
 
-Commit your changes.
-
+# Commit
 git add .
-git commit -m "Add your feature"
+git commit -m "Describe your change"
 
-
-Push your branch.
-
+# Push
 git push origin feature/your-feature
 
 
-Open a Pull Request.
+Keep frontend components consistent with the existing design system and avoid changing backend contracts unless the feature requires it.
+
+🗺️ Roadmap
+
+Potential areas for future development include:
+
+📈 Advanced poll analytics
+
+👥 Larger-scale audience participation
+
+📤 Additional sharing options
+
+🎨 More interface customization
+
+📊 Historical voting insights
+
+🚀 Production deployment improvements
+
+🔔 Extended notification functionality
 
 📌 Project Status
 
-PulseVote is an actively developed real-time polling application.
+PulseVote is a full-stack real-time polling application combining a responsive frontend with a Go-powered backend and real-time infrastructure.
 
-The project is structured to support continued improvements to the polling experience, real-time interaction, user management, and interface.
+The project is structured for local development and can be extended toward production deployment with appropriate infrastructure and security configuration.
 
 📄 License
 
-License information has not yet been specified.
+See the repository's license file for licensing information.
 
-👨‍💻 Project
+👨‍💻 PulseVote
 
-PulseVote
+PulseVote — real-time polling built for instant interaction.
 
-A real-time polling experience focused on fast interaction, live results, and a modern web interface.
-
-<p align="center"> <strong>PulseVote</strong><br> Ask. Vote. See It Happen. </p>
+Ask. Vote. See It Happen.
