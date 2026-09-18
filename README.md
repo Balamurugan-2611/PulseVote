@@ -64,9 +64,6 @@ PulseVote is a real-time polling platform for creating, sharing, and managing li
 🏗️ Architecture
 PulseVote is divided into three primary layers:
 
-┌──────────────────────────────────────────────────────────┐
-│                      PULSΕVOTE                           │
-└──────────────────────────────────────────────────────────┘
 
                     ┌───────────────┐
                     │    Browser    │
